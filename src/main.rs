@@ -11,7 +11,7 @@ impl  User {
             id,name
         }
     }
-    fn user_interest(&self, interests: Vec<(usize, &str)>) -> Vec<String> {
+    fn user_interest(&self, interests: &Vec<(usize, &str)>) -> Vec<String> {
         let mut interest: Vec<String> = Vec::new();
         for iters in interests.into_iter() {
             if self.id == iters.0 {
@@ -123,9 +123,8 @@ fn main() {
 
     let users = Users::new(users1);
     let mut friend_ship = Friendships::new();
-    friend_ship.friendships( &mut friend_ship1, &users);
-    let user = User::new(users.users[0].id, users.users[0].name.to_string());
-    println!("{:?}", user.user_interest(interests));
+    println!("user 0 -->{:?}", users.users[0].user_interest(&interests));
+    println!("user 1 --> {:?}", users.users[1].user_interest(&interests));
     println!("{:?}", friend_ship.friendship);
     println!("_________________________________________________");
     println!("{:?}", &users.users[5]);
