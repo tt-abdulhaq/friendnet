@@ -1,4 +1,6 @@
+use std::collections::HashSet;
 
+#[derive(Debug)]
 struct User {
     id: usize,
     name: String
@@ -10,21 +12,21 @@ impl  User {
         }
     }
 }
+#[derive(Debug)]
 struct  Users {
     users: Vec<User>
 }
+
 impl  Users {
     fn new(users: Vec<User>) -> Self {
         Users { users : users}
     }
-    
 }
 
 
 #[derive(Debug)]
 struct Friendships {
     friendship: Vec<(usize,Vec<usize>)>
-    
 }
 
 
@@ -49,6 +51,21 @@ impl  Friendships {
         let friends_ids = &mut self.friendship[user_id].1;
         friends_ids.len()
     }
+
+    fn friend_of_friends(&self, user: &User) -> Vec<usize> {
+        let user_id = user.id;
+        let mut foaf: HashSet<usize> = HashSet::new();
+        for friend_id in &self.friendship[user_id].1 {
+            for &foaf_id in &self.friendship[*friend_id].1 {
+                if foaf_id != user_id && !self.friendship[user_id].1.contains(&foaf_id) {
+                    foaf.insert(foaf_id);
+                }
+            }
+        }
+    
+        // Convert HashSet to Vec and return
+        foaf.into_iter().collect()
+    }
 }
 
 fn main() {
@@ -62,7 +79,7 @@ fn main() {
                             User{id: 7, name: "Devin".to_owned()},
                             User{id: 8, name: "Kate".to_owned()},
                             User{id: 9, name: "Klein".to_owned()}];
-    
+
     let mut friend_ship1 = vec![(0,1),
                                             (0,2),
                                             (1,2),
@@ -75,10 +92,34 @@ fn main() {
                                             (6,8),
                                             (7,8),
                                             (8,9)];
+
+    // find the ids of all users who like  a target interest.
+    let interests = [
+        (0, "Hadoop"), (0, "Big Data"), (0, "HBase"), (0, "Java"),
+        (0, "Spark"), (0, "Storm"), (0, "Cassandra"),
+        (1, "NoSQL"), (1, "MongoDB"), (1, "Cassandra"), (1, "HBase"),
+        (1, "Postgres"), (2, "Python"), (2, "scikit-learn"), (2, "scipy"),
+        (2, "numpy"), (2, "statsmodels"), (2, "pandas"), (3, "R"), (3, "Python"),
+        (3, "statistics"), (3, "regression"), (3, "probability"),
+        (4, "machine learning"), (4, "regression"), (4, "decision trees"),
+        (4, "libsvm"), (5, "Python"), (5, "R"), (5, "Java"), (5, "C++"),
+        (5, "Haskell"), (5, "programming languages"), (6, "statistics"),
+        (6, "probability"), (6, "mathematics"), (6, "theory"),
+        (7, "machine learning"), (7, "scikit-learn"), (7, "Mahout"),
+        (7, "neural networks"), (8, "neural networks"), (8, "deep learning"),
+        (8, "Big Data"), (8, "artificial intelligence"), (9, "Hadoop"),
+        (9, "Java"), (9, "MapReduce"), (9, "Big Data")];
+
+
     let users = Users::new(users1);
     let mut friend_ship = Friendships::new();
     friend_ship.friendships( &mut friend_ship1, &users);
-    println!("{:?}", friend_ship);
-    println!("{:?}", friend_ship.number_of_friends(&users.users[1]));
+    println!("{:?}", friend_ship.friendship);
+    println!("_________________________________________________");
+    println!("{:?}", &users.users[5]);
+    println!("{:?}", friend_ship.friendship[5]);
+    println!("{:?}", friend_ship.number_of_friends(&users.users[5]));
+    println!("{:?}", friend_ship.friend_of_friends(&users.users[5]));
+
     
 }
