@@ -7,6 +7,7 @@ FriendNet is a simple Rust program demonstrating friendship relationships among 
 - Representation of users and their friendships. [Done]
 - Calculating the number of friends a user has. [Done]
 - Finding friends of friends within the network. [Done]
+- Finding every user interest.[Done]
 - find the ids of all users who like  a target interest. [In Progress]
 
 `feel free to contribute.`
